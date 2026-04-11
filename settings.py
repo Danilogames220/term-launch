@@ -19,9 +19,19 @@ paths = [
 keybinds = {
     "quit": 27, # escape
     
-    "confirm": curses.KEY_ENTER,
+    # curses enter doesnt work for me idk why
+    "confirm": ord("Q"), #curses.KEY_ENTER,
    
-    "switch-mode": 0 # ctrl + space
+    "switch-mode": 0, # ctrl + space
+    
+    "navigation": {
+        "down": 67,
+        "up": 67
+    },
 
+    "navigation-global": {
+        "down": 67,
+        "up": 67
+    }
 }
 
