@@ -51,8 +51,9 @@ current_mode = modes.SEARCH
 apps = []
 asearch = ""
 acount = 0
-current_i = 0
+aoffset = 0
 
+current_i = 0
 
 c_width = 0
 c_height = 0
@@ -95,7 +96,8 @@ def usr_in(stdscr):
             
     # confirm
     if k == kb.get("confirm"):
-        subprocess.run((apps[current_i].ex_cmd+ " &").split())
+        subprocess.Popen(apps[current_i].ex_cmd.split(),
+                         preexec_fn=os.setpgrp)
         #launch()
         close(stdscr)
 
@@ -130,26 +132,26 @@ def usr_in(stdscr):
 
 def app_list(stdscr):
     global apps
-    global acount
+    global acount, aoffset
 
     apps = get_apps(paths)
     
     acount = len(apps)
     
-    aoffset = 0
+    alimit = c_height - 2
 
     stdscr.addstr(1, 0, f"{c_width}, {c_height}")
 
 
     # print to terminal 
-    for i in range(c_height - 2 + aoffset):
-        I = i + aoffset # actual app index
+    for i in range(alimit):
+        I = i # actual app index
         
-        if (I == current_i):
-            stdscr.addstr(i + 1, 0, f"{apps[I].name}", 
+        if (I == current_i + aoffset):
+            stdscr.addstr(i + 1, 0, f"{apps[I + aoffset].name}", 
                           curses.A_REVERSE | curses.A_BOLD)
         else:
-            stdscr.addstr(i + 1, 0, f"{apps[I].name}")
+            stdscr.addstr(i + 1, 0, f"{apps[I + aoffset].name}")
         pass
 
 # draw search line
