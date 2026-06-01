@@ -1,3 +1,12 @@
+# TODO
+# > IMPORTANT
+# - offset thing
+# - make this code less crap
+# - config
+
+# > DO LATER
+# - icons in kitty terminal
+
 import curses
 import os
 from enum import Enum
@@ -51,7 +60,7 @@ current_mode = modes.SEARCH
 apps = []
 asearch = ""
 acount = 0
-aoffset = 0
+aoffset = 1
 
 current_i = 0
 
@@ -140,19 +149,20 @@ def app_list(stdscr):
     
     alimit = c_height - 2
 
-    stdscr.addstr(1, 0, f"{c_width}, {c_height}")
-
-
+    # TODO
     # print to terminal 
+    s_visible = False
     for i in range(alimit):
-        I = i # actual app index
         
-        if (I == current_i + aoffset):
-            stdscr.addstr(i + 1, 0, f"{apps[I + aoffset].name}", 
+        if (i + aoffset == current_i):
+            stdscr.addstr(i + 1, 0, f"{apps[i + aoffset].name}", 
                           curses.A_REVERSE | curses.A_BOLD)
+            s_visible = True
         else:
-            stdscr.addstr(i + 1, 0, f"{apps[I + aoffset].name}")
-        pass
+            stdscr.addstr(i + 1, 0, f"{apps[i + aoffset].name}")
+        
+        if (not s_visible):
+            pass
 
 # draw search line
 def search_line(stdscr):

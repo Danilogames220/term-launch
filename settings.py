@@ -20,7 +20,7 @@ keybinds = {
     "quit": 27, # escape
     
     # curses enter doesnt work for me idk why
-    "confirm": ord("Q"), #curses.KEY_ENTER,
+    "confirm": 10, #curses.KEY_ENTER,
    
     "switch-mode": 0, # ctrl + space
     
