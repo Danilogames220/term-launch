@@ -17,14 +17,14 @@ import subprocess
 from settings import *
 
 class App:
-    name = ""
-    path = ""
-    ex_cmd = ""
+    name: str = ""
+    path: str  = ""
+    ex_cmd: str = ""
 
-    is_hidden = False
-    is_terminal = False
+    is_hidden: bool = False
+    is_terminal: bool = False
 
-    def __init__(self, path):
+    def __init__(self: App, path: str):
         self.path = path
 
         with open(path) as f:
@@ -57,24 +57,24 @@ class modes(Enum):
 current_mode = modes.SEARCH
 
 # app list stuff
-apps = []
-asearch = ""
-acount = 0
-aoffset = 1
+apps: list = []
+asearch: str = ""
+acount: int = 0
+aoffset: int = 1
 
-current_i = 0
+current_i: int = 0
 
-c_width = 0
-c_height = 0
+c_width: int = 0
+c_height: int = 0
 
 # --- FUNCTIONS --- #
-def close(stdscr):
+def close(stdscr) -> None:
     exit(0)
 
 
 # get system apps
-def get_apps(dirs):
-    files = [] 
+def get_apps(dirs) -> list[App]:
+    files: list = [] 
 
     for d in dirs:
         try:
@@ -83,7 +83,7 @@ def get_apps(dirs):
         except:
             continue
     
-    apps = []
+    apps: list = []
     
     for p in files:
         app = App(p)
@@ -143,7 +143,7 @@ def app_list(stdscr):
     global apps
     global acount, aoffset
 
-    apps = get_apps(paths)
+    apps: list[App] = get_apps(paths)
     
     acount = len(apps)
     
@@ -165,14 +165,14 @@ def app_list(stdscr):
             pass
 
 # draw search line
-def search_line(stdscr):
+def search_line(stdscr) -> None:
     if (current_mode == modes.SEARCH):
         stdscr.addstr(0, 0, " Search: ", curses.A_BOLD)
     elif (current_mode == modes.NAVIGATE):
         stdscr.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD)
 
 
-def main(stdscr):
+def main(stdscr) -> None:
     global c_width
     global c_height
     c_height, c_width = stdscr.getmaxyx()
