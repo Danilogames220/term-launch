@@ -1,7 +1,15 @@
 from enum import Enum
 import copy
 
+# keeps a value between x and y
+def clamp(n: int, x: int, y: int) -> int:
+    if n < x:
+        return x
+    if n > y:
+        return y
+    return n
 
+# 2-dimentional vector object
 class vec2:
     x: int = 0
     y: int = 0
