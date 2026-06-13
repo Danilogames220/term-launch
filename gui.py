@@ -32,23 +32,22 @@ class Gui:
     
 
     def loop(self: Gui) -> None:
-        #self.window.addstr(1, 0, f"w: {self.size.x}; h: {self.size.y}")
+        self.is_running = True
+        while (self.is_running):
+            #self.window.addstr(1, 0, f"w: {self.size.x}; h: {self.size.y}")
         
-        # draw parts of the gui
-        self.search_line("search")
-        #self.entry_list()
-            
-        if (self.window.getch() == ord('q')):
-            exit(0)
+            # draw parts of the gui
+            self.search_line("search")
+            #self.entry_list()
 
+            self.buffer.loop()
     
-    def __init__(self: Gui, Window: curses.window):
+    def __init__(self: Gui, Window: curses.window, buf: Buffer):
         self.window = Window
+        self.buffer = buf
         
         self.size.y, self.size.x = self.window.getmaxyx()
 
-        self.is_running = True
-        while (self.is_running):
-            self.loop()
+        #self.loop()
         
         pass

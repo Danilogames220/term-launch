@@ -2,12 +2,14 @@ from enum import Enum
 import copy
 
 # keeps a value between x and y
-def clamp(n: int, x: int, y: int) -> int:
+def clamp(n: int, x: int, y: int = 0) -> int:
+    '''
     if n < x:
         return x
     if n > y:
         return y
-    return n
+    '''
+    return n % x
 
 # 2-dimentional vector object
 class vec2:
