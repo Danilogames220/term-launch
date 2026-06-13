@@ -1,23 +1,23 @@
 import curses
 
 from public import *
-from entries import *
 
 class Buffer:
     window: curses.window;
+
     # curent data search string
     data: str = '';
     # buffer mode
-    mode: int = modes.SEARCH;
+    mode: modes = modes.NAV;
     # cursor pos
-    pos: int = 1;
+    pos: int = 0;
     # maximum cursor pos
     pos_max: int;
     
     # keybinds are set inside __init__
     # first int is the mode for that keybind to trigger
     # second int is for key ascii code
-    keybinds: dict[int, dict[int, callable]]; 
+    keybinds: dict[modes, dict[int, callable]]; 
 
     # move cursor pos in the list
     def move_up(self) -> None:
@@ -33,7 +33,7 @@ class Buffer:
     '''
     # NOTE: only works like this because it only has 2 modes
     def change_mode(self) -> None:
-        self.mode = int(not self.mode)
+        self.mode = modes(not self.mode.value)
     def term(self) -> None:
         exit(0)
         pass
@@ -65,13 +65,18 @@ class Buffer:
         self.window = win
         self.keybinds = {
             modes.SEARCH: {
-                ord('q'): self.term,
+                # esc
+                27: self.term,
+                # ctrl+space
+                0: self.change_mode,
                 ord('e'): self.select
             },
             modes.NAV: {
-                ord('q'): self.term,
+                # esc
+                27: self.term,
+                # ctrl+space
+                0: self.change_mode,
                 ord('e'): self.select
             }
         }; 
-        pass
 

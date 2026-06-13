@@ -15,6 +15,8 @@ class Window:
         pass
     
     def __init__(self: Window, window: curses.window) -> None:
+        curses.set_escdelay(1)
+
         self.buffer = Buffer(window)
         self.gui = Gui(window, self.buffer)
         
