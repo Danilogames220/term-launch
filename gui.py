@@ -2,6 +2,7 @@ import curses
 
 from public import *
 from buffer import *
+from entries import *
 
 # handles gui
 class Gui:

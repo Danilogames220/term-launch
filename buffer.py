@@ -1,6 +1,7 @@
 import curses
 
 from public import *
+from entries import *
 
 class Buffer:
     window: curses.window;
@@ -30,8 +31,9 @@ class Buffer:
     def move_c_down() -> None:
         pass
     '''
+    # NOTE: only works like this because it only has 2 modes
     def change_mode(self) -> None:
-        pass
+        self.mode = int(not self.mode)
     def term(self) -> None:
         exit(0)
         pass
@@ -46,7 +48,7 @@ class Buffer:
     def parse_keypress(self) -> None:
         # current key pressed
         k: int = self.window.getch()
-        self.window.addstr(4, 0, f"{chr(k)}: {k}    ")
+        #self.window.addstr(4, 0, f"{chr(k)}: {k}    ")
 
         try:
             # NOTE: for some reason it wont run the dict functions unless i have Exception in except

@@ -4,10 +4,12 @@ import threading
 from gui import *
 from public import *
 from buffer import *
+from entries import *
 
 class Window:
-    gui: Gui
-    buffer: Buffer
+    gui: Gui;
+    buffer: Buffer;
+    entries: Entries;
 
     def loop(self: Window) -> None:
         pass
@@ -16,10 +18,6 @@ class Window:
         self.buffer = Buffer(window)
         self.gui = Gui(window, self.buffer)
         
-        #gui_t: threading.Thread = threading.Thread(target=self.gui.loop)
-        #buffer_t: threading.Thread = threading.Thread(target=self.buffer.loop)
-        #gui_t.start()
-        #buffer_t.start()
         self.gui.loop()
 
 def main(win: curses.window) -> None:
