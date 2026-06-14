@@ -11,6 +11,7 @@ class Buffer:
     mode: modes = modes.NAV;
     # cursor pos
     pos: int = 0;
+    cpos: int = 0;
     # maximum cursor pos
     pos_max: int;
     
@@ -23,14 +24,12 @@ class Buffer:
     def move_up(self) -> None:
         self.pos = clamp(self.pos + 1, self.pos_max + 1);
     def move_down(self) -> None:
-        self.pos = clamp(self.pos + 1, self.pos_max + 1);
+        self.pos = clamp(self.pos - 1, self.pos_max + 1);
     # move list offset only
-    '''
-    def move_c_up() -> None:
-        pass
-    def move_c_down() -> None:
-        pass
-    '''
+    def move_c_up(self) -> None:
+        self.cpos = clamp(self.cpos + 1, self.pos_max + 1);
+    def move_c_down(self) -> None:
+        self.cpos = clamp(self.cpos - 1, self.pos_max + 1);
     # NOTE: only works like this because it only has 2 modes
     def change_mode(self) -> None:
         self.mode = modes(not self.mode.value)
@@ -61,22 +60,40 @@ class Buffer:
     def loop(self) -> None:
         self.parse_keypress()
     
-    def __init__(self, win: curses.window) -> None:
+    def __init__(self, 
+        win: curses.window,     # window
+        e_count: int            # entry count
+    ) -> None:
         self.window = win
+        self.pos_max = e_count
+
         self.keybinds = {
             modes.SEARCH: {
                 # esc
                 27: self.term,
                 # ctrl+space
                 0: self.change_mode,
-                ord('e'): self.select
+                #ord('e'): self.select
+
+                # ctrl-k
+                11: self.move_down,
+                # ctrl-j
+                10: self.move_up,
             },
             modes.NAV: {
                 # esc
                 27: self.term,
                 # ctrl+space
                 0: self.change_mode,
-                ord('e'): self.select
+                #ord('e'): self.select
+                
+                # move select
+                ord('k'): self.move_down,
+                ord('j'): self.move_up,
+                # move list offset
+                # ctrl-k
+                11: self.move_c_down,
+                # ctrl-j
+                10: self.move_c_up,
             }
         }; 
-

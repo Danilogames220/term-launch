@@ -17,8 +17,10 @@ class Window:
     def __init__(self: Window, window: curses.window) -> None:
         curses.set_escdelay(1)
 
-        self.buffer = Buffer(window)
-        self.gui = Gui(window, self.buffer)
+        self.entries = Entries()
+
+        self.buffer = Buffer(window, len(self.entries.plist))
+        self.gui = Gui(window, self.buffer, self.entries)
         
         self.gui.loop()
 
