@@ -1,5 +1,5 @@
-# TermRun
-Command line application launcher made with python3
+# Term-Launch
+Application launcher via command-line made with python3
 
-## Features
-
+## About
+## Keybinds
