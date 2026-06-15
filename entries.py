@@ -13,13 +13,17 @@ class App:
     is_hidden: bool = False
     is_terminal: bool = False
     
-    def parse_cmd(self, cmd: str) -> str:
+    def parse_cmd(self, 
+        cmd: str
+    ) -> str:
         return ""
     
-    def parse_file(self, path: str) -> None:
+    def parse_file(self,
+        path: str
+    ) -> None:
         pass
 
-    def __init__(self: App, path: str):
+    def __init__(self, path: str):
         self.path = path
 
         with open(path) as f:
@@ -86,5 +90,5 @@ class Entries:
         return apps
 
     def __init__(self) -> None:
-        #self.apps = self.get()
+        self.apps = self.get()
         pass

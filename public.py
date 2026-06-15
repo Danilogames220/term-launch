@@ -1,15 +1,6 @@
 from enum import Enum
+import curses
 import copy
-
-# keeps a value between x and y
-def clamp(n: int, x: int, y: int = 0) -> int:
-    '''
-    if n < x:
-        return x
-    if n > y:
-        return y
-    '''
-    return n % x
 
 # 2-dimentional vector object
 class vec2:
@@ -27,4 +18,13 @@ class vec2:
 class modes(Enum):
     SEARCH = 0
     NAV = 1
+
+# keeps a value between x and y
+def clamp(n: int, x: int, y: int = 0) -> int:
+    if n < x:
+        return x
+    if n > y:
+        return y
+    return n
+    #return n % x
 

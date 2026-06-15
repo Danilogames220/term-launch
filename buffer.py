@@ -6,7 +6,7 @@ class Buffer:
     window: curses.window;
 
     # curent data search string
-    data: str = '';
+    data: str = "data";
     # buffer mode
     mode: modes = modes.NAV;
     # cursor pos
@@ -14,22 +14,57 @@ class Buffer:
     cpos: int = 0;
     # maximum cursor pos
     pos_max: int;
+    cpos_max: int;
     
     # keybinds are set inside __init__
     # first int is the mode for that keybind to trigger
     # second int is for key ascii code
     keybinds: dict[modes, dict[int, callable]]; 
 
-    # move cursor pos in the list
-    def move_up(self) -> None:
-        self.pos = clamp(self.pos + 1, self.pos_max + 1);
-    def move_down(self) -> None:
-        self.pos = clamp(self.pos - 1, self.pos_max + 1);
     # move list offset only
-    def move_c_up(self) -> None:
-        self.cpos = clamp(self.cpos + 1, self.pos_max + 1);
     def move_c_down(self) -> None:
-        self.cpos = clamp(self.cpos - 1, self.pos_max + 1);
+        self.cpos = clamp(self.cpos + 1, 0, self.cpos_max + 1);
+    def move_c_up(self) -> None:
+        self.cpos = clamp(self.cpos - 1, 0, self.cpos_max + 1);
+    # move cursor pos in the list
+    def move_down(self) -> None:
+        '''
+        if (
+            self.pos - self.cpos - 1 
+            < 
+            self.cpos_max
+        ):
+            self.pos = self.cpos
+            return
+        '''
+        self.pos = clamp(self.pos + 1, 0, self.pos_max);
+        # move cpos if cursor goes offscreen
+        if (
+            self.pos - self.cpos - 1
+            > 
+            self.cpos_max
+        ):
+            self.move_c_down() 
+
+    def move_up(self) -> None:
+        '''
+        if (
+            self.pos - self.cpos - 1 
+            > 
+            self.cpos_max
+        ):
+            self.pos = self.cpos + self.cpos_max
+            return
+        '''
+        self.pos = clamp(self.pos - 1, 0, self.pos_max);
+        # move cpos if cursor goes offscreen
+        if (
+            self.pos 
+            < 
+            self.cpos
+        ):
+            self.move_c_up() 
+
     # NOTE: only works like this because it only has 2 modes
     def change_mode(self) -> None:
         self.mode = modes(not self.mode.value)
@@ -40,7 +75,7 @@ class Buffer:
         exit(1)
 
     # handles input for seach data
-    def s_data(self, win: curses.window) -> str:
+    def add_chr(self) -> str:
         return ""
 
     # handles keypress
@@ -65,7 +100,8 @@ class Buffer:
         e_count: int            # entry count
     ) -> None:
         self.window = win
-        self.pos_max = e_count
+        self.pos_max = e_count 
+        self.cpos_max = e_count - win.getmaxyx()[0] + 1
 
         self.keybinds = {
             modes.SEARCH: {
@@ -88,12 +124,12 @@ class Buffer:
                 #ord('e'): self.select
                 
                 # move select
-                ord('k'): self.move_down,
-                ord('j'): self.move_up,
+                ord('j'): self.move_down,
+                ord('k'): self.move_up,
                 # move list offset
                 # ctrl-k
-                11: self.move_c_down,
+                10: self.move_c_down,
                 # ctrl-j
-                10: self.move_c_up,
+                11: self.move_c_up,
             }
         }; 

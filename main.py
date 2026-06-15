@@ -1,8 +1,8 @@
 import curses
 import threading
 # files
-from gui import *
 from public import *
+from gui import *
 from buffer import *
 from entries import *
 
@@ -11,15 +11,20 @@ class Window:
     buffer: Buffer;
     entries: Entries;
 
-    def loop(self: Window) -> None:
+    #def loop(self) -> None:
+    #    pass
+
+    def term(self) -> None:
         pass
     
-    def __init__(self: Window, window: curses.window) -> None:
+    def __init__(self, 
+        window: curses.window
+    ) -> None:
         curses.set_escdelay(1)
 
         self.entries = Entries()
 
-        self.buffer = Buffer(window, len(self.entries.plist))
+        self.buffer = Buffer(window, len(self.entries.apps))
         self.gui = Gui(window, self.buffer, self.entries)
         
         self.gui.loop()
