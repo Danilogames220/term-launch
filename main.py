@@ -24,7 +24,7 @@ class Window:
 
         self.entries = Entries()
 
-        self.buffer = Buffer(window, len(self.entries.apps))
+        self.buffer = Buffer(window, self.entries, len(self.entries.apps))
         self.gui = Gui(window, self.buffer, self.entries)
         
         self.gui.loop()

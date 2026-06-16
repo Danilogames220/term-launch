@@ -1,9 +1,13 @@
 import curses
+import os
+import subprocess
 
 from public import *
+from entries import *
 
 class Buffer:
     window: curses.window;
+    entries: Entries;
 
     # curent data search string
     data: str = "data";
@@ -71,7 +75,14 @@ class Buffer:
     def term(self) -> None:
         exit(0)
         pass
-    def select(self) -> None:
+    def select(self) -> None: 
+        '''
+        subprocess.Popen(
+            self.entries.apps[self.pos].ex_cmd.split(),
+            preexec_fn=os.setpgrp
+        )
+        '''
+        subprocess.Popen('kitty -c "zsh"'.split(), stdout=subprocess.PIPE) 
         exit(1)
 
     # handles input for seach data
@@ -97,9 +108,12 @@ class Buffer:
     
     def __init__(self, 
         win: curses.window,     # window
+        ent: Entries,           # entries pointer
         e_count: int            # entry count
     ) -> None:
         self.window = win
+        self.entries = ent
+
         self.pos_max = e_count 
         self.cpos_max = e_count - win.getmaxyx()[0] + 1
 
@@ -127,9 +141,10 @@ class Buffer:
                 ord('j'): self.move_down,
                 ord('k'): self.move_up,
                 # move list offset
-                # ctrl-k
-                10: self.move_c_down,
-                # ctrl-j
-                11: self.move_c_up,
+                ord('J'): self.move_c_down,
+                ord('K'): self.move_c_up,
+
+                # select
+                10: self.select,
             }
         }; 
