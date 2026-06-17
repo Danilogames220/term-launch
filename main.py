@@ -1,5 +1,4 @@
 import curses
-import threading
 # files
 from public import *
 from gui import *
@@ -11,11 +10,8 @@ class Window:
     buffer: Buffer;
     entries: Entries;
 
-    #def loop(self) -> None:
+    #def term(self) -> None:
     #    pass
-
-    def term(self) -> None:
-        pass
     
     def __init__(self, 
         window: curses.window
@@ -24,7 +20,7 @@ class Window:
 
         self.entries = Entries()
 
-        self.buffer = Buffer(window, self.entries, len(self.entries.apps))
+        self.buffer = Buffer(window, self.entries)
         self.gui = Gui(window, self.buffer, self.entries)
         
         self.gui.loop()

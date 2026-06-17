@@ -1,5 +1,4 @@
 import curses
-import os
 import subprocess
 
 from public import *
@@ -13,7 +12,7 @@ class Buffer:
     data: str = "data";
     # buffer mode
     mode: modes = modes.NAV;
-    # cursor pos
+    # current app selected of self.entries
     pos: int = 0;
     cpos: int = 0;
     # maximum cursor pos
@@ -76,14 +75,13 @@ class Buffer:
         exit(0)
         pass
     def select(self) -> None: 
-        '''
+        exec_cmd: str = self.entries.apps[self.pos].ex_cmd
         subprocess.Popen(
-            self.entries.apps[self.pos].ex_cmd.split(),
-            preexec_fn=os.setpgrp
-        )
-        '''
-        subprocess.Popen('kitty -c "zsh"'.split(), stdout=subprocess.PIPE) 
-        exit(1)
+            exec_cmd.split(), 
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        ) 
+        exit(0)
 
     # handles input for seach data
     def add_chr(self) -> str:
@@ -93,14 +91,12 @@ class Buffer:
     def parse_keypress(self) -> None:
         # current key pressed
         k: int = self.window.getch()
-        #self.window.addstr(4, 0, f"{chr(k)}: {k}    ")
 
         try:
             # NOTE: for some reason it wont run the dict functions unless i have Exception in except
             self.keybinds[self.mode][k]()
         except Exception as e: 
             pass
-            #self.window.addstr(3, 0, "e")
 
     # runs after each time gui draws
     def loop(self) -> None:
@@ -109,10 +105,10 @@ class Buffer:
     def __init__(self, 
         win: curses.window,     # window
         ent: Entries,           # entries pointer
-        e_count: int            # entry count
     ) -> None:
         self.window = win
         self.entries = ent
+        e_count: int = len(self.entries.apps)
 
         self.pos_max = e_count 
         self.cpos_max = e_count - win.getmaxyx()[0] + 1
@@ -123,12 +119,8 @@ class Buffer:
                 27: self.term,
                 # ctrl+space
                 0: self.change_mode,
-                #ord('e'): self.select
-
-                # ctrl-k
-                11: self.move_down,
-                # ctrl-j
-                10: self.move_up,
+                # select
+                10: self.select,
             },
             modes.NAV: {
                 # esc
