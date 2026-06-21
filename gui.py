@@ -44,7 +44,8 @@ class Gui:
         #self.window.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
         self.window.addstr(0, 0, 
             f"cpos_max: {self.buffer.cpos_max} " + 
-            f"pos: {self.buffer.pos}"
+            f"pos: {self.buffer.pos} " + 
+            f"name: {self.entries.apps[self.buffer.pos].name}"
         )
 
     sl_modes: dict[modes, callable] = {
@@ -76,8 +77,9 @@ class Gui:
                     self.window.addstr(I, 0, f"{self.entries.apps[i].name}")
                 continue
             except Exception as e:
-                #self.clearln(I)
-                #self.window.addstr(I, 0, f"~ {e}")
+                if (e == IndexError):
+                    self.clearln(I)
+                    self.window.addstr(I, 0, "~")
                 pass
     
 

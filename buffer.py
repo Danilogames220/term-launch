@@ -109,7 +109,7 @@ class Buffer:
     ) -> None:
         self.window = win
         self.entries = ent
-        e_count: int = len(self.entries.apps)
+        e_count: int = len(self.entries.apps) - 1
 
         self.pos_max = e_count 
         self.cpos_max = win.getmaxyx()[0] - 2
