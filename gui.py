@@ -40,7 +40,12 @@ class Gui:
         target: str
     ) -> None:
         self.clearln(0)
-        self.window.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
+        # TODO change this
+        #self.window.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
+        self.window.addstr(0, 0, 
+            f"cpos_max: {self.buffer.cpos_max} " + 
+            f"pos: {self.buffer.pos}"
+        )
 
     sl_modes: dict[modes, callable] = {
         modes.SEARCH: sl_search,
@@ -70,9 +75,10 @@ class Gui:
                 else:
                     self.window.addstr(I, 0, f"{self.entries.apps[i].name}")
                 continue
-            except:
+            except Exception as e:
+                #self.clearln(I)
+                #self.window.addstr(I, 0, f"~ {e}")
                 pass
-            #self.window.addstr(I, 0, "~")
     
 
     def loop(self) -> None:

@@ -43,9 +43,10 @@ class Buffer:
         self.pos = clamp(self.pos + 1, 0, self.pos_max);
         # move cpos if cursor goes offscreen
         if (
-            self.pos - self.cpos - 1
-            > 
+            self.pos - self.cpos
+            >
             self.cpos_max
+            #self.cpos_max
         ):
             self.move_c_down() 
 
@@ -111,7 +112,7 @@ class Buffer:
         e_count: int = len(self.entries.apps)
 
         self.pos_max = e_count 
-        self.cpos_max = e_count - win.getmaxyx()[0] + 1
+        self.cpos_max = win.getmaxyx()[0] - 2
 
         self.keybinds = {
             modes.SEARCH: {

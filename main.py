@@ -16,7 +16,8 @@ class Window:
     def __init__(self, 
         window: curses.window
     ) -> None:
-        curses.set_escdelay(1)
+        curses.set_escdelay(1) 
+        curses.curs_set(0)
 
         self.entries = Entries()
 
