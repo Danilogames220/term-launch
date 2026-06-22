@@ -1,20 +1,36 @@
 from enum import Enum
 import curses
-import copy
 
+from entries import *
+
+# terminal to launch terminal apps
 TERMINAL: str = "kitty"
+'''
+# dirs to pull app entries from
+HOMED: str = f"{Path.home()}"
+PATHS: list[str] = [
+    "/usr/share/applications/",
+    "/usr/local/share/applications/",
+    f"{homed}/.local/share/applications/",
+]
+'''
 
-# 2-dimentional vector object
-class vec2:
-    x: int = 0
-    y: int = 0
-    
-    def copy(self: vec2) -> vec2:
-        return copy.deepcopy(self)
-    
-    def __init__(self: vec2, X: int, Y: int):
-        self.x = X
-        self.y = Y
+
+# wrapper for shared window data
+class Win_data:
+    width: int = -1
+    height: int = -1
+    p: curses.window # pointer to curses.window
+
+    cursor_position: int = 0;
+    entries: list[App]
+
+    def __init__(self,
+        win: curses.window
+    ) -> None:
+        self.p = win
+        self.height, self.width = self.p.getmaxyx()
+
 
 # NOTE: if you add aother mode, change how Buffer.change_mode() works
 class modes(Enum):
@@ -29,4 +45,3 @@ def clamp(n: int, x: int, y: int = 0) -> int:
         return y
     return n
     #return n % x
-

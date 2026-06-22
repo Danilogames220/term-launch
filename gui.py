@@ -6,8 +6,7 @@ from entries import *
 
 # handles gui
 class Gui:
-    # window
-    window: curses.window
+    window: Win_data
     # pointer to window buffer
     buffer: Buffer
     # pointer to window entries
@@ -17,16 +16,13 @@ class Gui:
     apps: list[App]
     is_running: bool = False
     
-    # window size
-    size: vec2 = vec2(-1, -1)
-    
     # entry list offset
     el_offset: int = 0;
 
     def clearln(self,
         pos: int, 
     ) -> None:
-        self.window.addstr(pos, 0, ' ' * (self.size.x - 1))
+        self.window.p.addstr(pos, 0, ' ' * (self.window.width - 1))
 
     # search line mode styles
     def sl_search(self, 
@@ -34,13 +30,13 @@ class Gui:
     ) -> None:
         self.clearln(0)
         t: str = " Search: "
-        self.window.addstr(0, 0, " Search:", curses.A_BOLD | curses.A_UNDERLINE)
-        self.window.addstr(0, len(t), f"{target}")
+        self.window.p.addstr(0, 0, " Search:", curses.A_BOLD | curses.A_UNDERLINE)
+        self.window.p.addstr(0, len(t), f"{target}")
     def sl_navigate(self,
         target: str
     ) -> None:
         self.clearln(0)
-        self.window.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
+        self.window.p.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
         ''' # for debug
         self.window.addstr(0, 0, 
             f"term: {self.entries.apps[self.buffer.pos].is_terminal} " +
@@ -61,7 +57,7 @@ class Gui:
     
     # show entry list
     def entry_list(self) -> None:
-        lsize: int = self.size.y
+        lsize: int = self.window.height
 
         for I in range(1, lsize):
             # actual index
@@ -71,14 +67,14 @@ class Gui:
             self.clearln(I)
             try:
                 if (self.buffer.pos == i):
-                    self.window.addstr(I, 0, f"{self.entries.apps[i].name}", curses.A_REVERSE | curses.A_BOLD)
+                    self.window.p.addstr(I, 0, f"{self.entries.apps[i].name}", curses.A_REVERSE | curses.A_BOLD)
                 else:
-                    self.window.addstr(I, 0, f"{self.entries.apps[i].name}")
+                    self.window.p.addstr(I, 0, f"{self.entries.apps[i].name}")
                 continue
             except Exception as e:
                 if (e == IndexError):
                     self.clearln(I)
-                    self.window.addstr(I, 0, "~")
+                    self.window.p.addstr(I, 0, "~")
                 pass
     
 
@@ -94,16 +90,11 @@ class Gui:
             self.buffer.loop()
     
     def __init__(self, 
-        Window: curses.window, 
+        dat: Win_data,
         buf: Buffer,
-        ent: Entries
+        ent: Entries,
     ) -> None:
-        self.window = Window
+        self.window = dat
         self.buffer = buf
         self.entries = ent
         
-        self.size.y, self.size.x = self.window.getmaxyx()
-
-        #self.loop()
-        
-        pass

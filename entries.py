@@ -3,7 +3,6 @@ from pathlib import Path
 
 from public import *
 
-#TERMINAL: str = "kitty"
 
 # Holds data of each app
 class App:
@@ -68,9 +67,6 @@ class App:
                 # check if it is a terminal app
                 if (check(line, "Terminal=true")):
                     self.is_terminal = True
-        
-        # parse command
-        #self.ex_cmd = self.parse_cmd(raw_cmd)
 
 # handles apps
 class Entries:
