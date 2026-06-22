@@ -76,9 +76,19 @@ class Buffer:
         exit(0)
         pass
     def select(self) -> None: 
-        exec_cmd: str = self.entries.apps[self.pos].ex_cmd
+        # selected app
+        s_app: App = self.entries.apps[self.pos]
+        exec_cmd: list[str] # s_app.ex_cmd
+        
+        #TERMINAL: str = "kitty"
+
+        if (s_app.is_terminal):
+            exec_cmd = [TERMINAL] + self.entries.apps[self.pos].ex_cmd.split()
+        else:
+            exec_cmd = s_app.ex_cmd.split()
+
         subprocess.Popen(
-            exec_cmd.split(), 
+            exec_cmd, 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         ) 

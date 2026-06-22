@@ -2,6 +2,8 @@ from enum import Enum
 import curses
 import copy
 
+TERMINAL: str = "kitty"
+
 # 2-dimentional vector object
 class vec2:
     x: int = 0

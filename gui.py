@@ -40,13 +40,13 @@ class Gui:
         target: str
     ) -> None:
         self.clearln(0)
-        # TODO change this
-        #self.window.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
+        self.window.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
+        ''' # for debug
         self.window.addstr(0, 0, 
-            f"cpos_max: {self.buffer.cpos_max} " + 
-            f"pos: {self.buffer.pos} " + 
-            f"name: {self.entries.apps[self.buffer.pos].name}"
+            f"term: {self.entries.apps[self.buffer.pos].is_terminal} " +
+            f"path: {self.entries.apps[self.buffer.pos].path} "
         )
+        '''
 
     sl_modes: dict[modes, callable] = {
         modes.SEARCH: sl_search,
@@ -57,7 +57,6 @@ class Gui:
     def search_line(self,
             target: str
     ) -> None:
-        #self.window.addstr(0, 0, f"mode: {self.buffer.mode}; pos = {self.buffer.pos}    ")
         self.sl_modes[self.buffer.mode](self=self, target="target")
     
     # show entry list

@@ -3,6 +3,8 @@ from pathlib import Path
 
 from public import *
 
+#TERMINAL: str = "kitty"
+
 # Holds data of each app
 class App:
     name: str;
@@ -16,45 +18,71 @@ class App:
     def parse_cmd(self, 
         cmd: str
     ) -> str:
-        return ""
-        
+        p_cmd: str = cmd
+
+        return p_cmd
+    
+    '''
+    # functions to do for each thing found
+    def p_name(self, l: str) -> Bool:
+        return True
+    def p_hidden(self, l: str) -> Bool:
+        return True
+    def p_exec(self, l: str) -> Bool:
+        return True
+
     def parse_file(self,
         path: str
     ) -> None:
+        for line in path:
+            try:
+                pass
+            except:
+                pass
         pass
+    '''
 
     def __init__(self, path: str):
         self.path = path
         self.name = ""
+
+        raw_cmd: str = ""
         
-        # TODO: move this to parse_file
         with open(path) as f:
+            def check(l: str, arg: str) -> bool:
+                return (l.find(arg) != -1)
+
             for line in f:
                 # find app name
-                if (line.find("Name=") != -1) and (len(self.name) == 0):
+                if (check(line, "Name=")) and (len(self.name) == 0):
                     self.name = line.split("Name=")[1]
                     #self.name = line[line.find("Name="):]
                 # find app launch command
-                if (line.find("Exec=") != -1):
-                    self.ex_cmd = line.split("Exec=")[1]
+                if (check(line, "Exec=")):
+                    self.ex_cmd = self.parse_cmd(line.split("Exec=")[1])
 
                 # check if app is hidden 
-                if (line.find("NoDisplay=true") != -1 or
-                    line.find("Hidden=true") != -1
-                ):
+                if (check(line, "NoDisplay=true")) or (check(line, "Hidden=true")):
                     self.is_hidden = True
                 
-                # check if it's a terminal app
-                if (line.find("Terminal=") != -1) and (line.split("Terminal=")[1] == "true"):
+                # check if it is a terminal app
+                if (check(line, "Terminal=true")):
                     self.is_terminal = True
+        
+        # parse command
+        #self.ex_cmd = self.parse_cmd(raw_cmd)
 
 # handles apps
 class Entries:
+    # all visible apps
     apps: list[App]
+    # filtered apps
+    filtered_apps: list[App]
+
     
     # TODO: make this get all entries at the same time
     def get(self) -> list[App]:
-        homed = Path.home()
+        homed: str = f"{Path.home()}"
         paths: list[str] = [
             "/usr/share/applications/",
             "/usr/local/share/applications/",
@@ -72,11 +100,19 @@ class Entries:
         apps: list[App] = []
     
         for p in files:
+            # check if is a .desktop file
+            ext: str = "desktop"
+            if not (p[len(p) - len(ext):] == ext):
+                    continue
+            
+            # check if is a hidden entry
             a_temp: App = App(p)
             if (not a_temp.is_hidden):
                 apps.append(a_temp)
         
         return apps
+    def search(self) -> None:
+        pass
 
     def __init__(self) -> None:
         self.apps = self.get()
