@@ -15,15 +15,23 @@ PATHS: list[str] = [
 ]
 '''
 
-
 # wrapper for shared window data
 class Win_data:
     width: int = -1
     height: int = -1
     p: curses.window # pointer to curses.window
 
-    cursor_position: int = 0;
+    selected_entry_index: int = 0;
+    list_display_offset: int = 0;
+
     entries: list[App]
+    entry_count: int = 0;
+
+    def set_entries(self,
+        new: list[App]
+    ) -> None:
+        self.entries = new
+        self.entry_count = len(new)
 
     def __init__(self,
         win: curses.window

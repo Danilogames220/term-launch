@@ -5,6 +5,7 @@ from public import *
 from entries import *
 
 class Buffer:
+    win: Win_data;
     window: curses.window;
     entries: Entries;
 
