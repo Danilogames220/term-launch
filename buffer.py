@@ -26,9 +26,9 @@ class Buffer:
 
     # move list offset only
     def move_c_down(self) -> None:
-        self.cpos = clamp(self.cpos + 1, 0, self.cpos_max + 1);
+        self.cpos = clamp(self.cpos + 1, 0, self.pos_max + 1);
     def move_c_up(self) -> None:
-        self.cpos = clamp(self.cpos - 1, 0, self.cpos_max + 1);
+        self.cpos = clamp(self.cpos - 1, 0, self.pos_max + 1);
     # move cursor pos in the list
     def move_down(self) -> None:
         '''
