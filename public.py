@@ -28,10 +28,10 @@ class Win_data:
     entry_count: int = 0;
 
     def set_entries(self,
-        new: list[App]
+        List: list[App]
     ) -> None:
-        self.entries = new
-        self.entry_count = len(new)
+        self.entries = List
+        self.entry_count = len(List)
 
     def __init__(self,
         win: curses.window

@@ -5,7 +5,7 @@ from public import *
 from entries import *
 
 class Buffer:
-    win: Win_data;
+    w_data: Win_data;
     window: curses.window;
     entries: Entries;
 
@@ -111,13 +111,16 @@ class Buffer:
             pass
 
     # runs after each time gui draws
+    # TODO rename this (looping will be handled my window)
     def loop(self) -> None:
         self.parse_keypress()
     
-    def __init__(self, 
+    def __init__(self,
+        data: Win_data,
         win: curses.window,     # window
-        ent: Entries,           # entries pointer
+        ent: Entries            # entries pointer
     ) -> None:
+        self.w_data = data
         self.window = win
         self.entries = ent
         e_count: int = len(self.entries.apps) - 1

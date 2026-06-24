@@ -7,9 +7,8 @@ from entries import *
 # handles gui
 class Gui:
     window: Win_data
-    # pointer to window buffer
+    # NOTE: this should be the only object to have direct acess to the other ones
     buffer: Buffer
-    # pointer to window entries
     entries: Entries
 
     # list of each app entry
@@ -18,11 +17,18 @@ class Gui:
     
     # entry list offset
     el_offset: int = 0;
-
+    
     def clearln(self,
         pos: int, 
     ) -> None:
         self.window.p.addstr(pos, 0, ' ' * (self.window.width - 1))
+    def setLn(self,
+              line: int,
+              row: int,
+              text: str,
+              curses_style: int = curses.A_NORMAL
+    ) -> None:
+        self.window.p.addstr(line, row, text, curses_style)
 
     # search line mode styles
     def sl_search(self, 
@@ -30,13 +36,13 @@ class Gui:
     ) -> None:
         self.clearln(0)
         t: str = " Search: "
-        self.window.p.addstr(0, 0, " Search:", curses.A_BOLD | curses.A_UNDERLINE)
-        self.window.p.addstr(0, len(t), f"{target}")
+        self.setLn(0, 0, " Search:", curses.A_BOLD | curses.A_UNDERLINE)
+        self.setLn(0, len(t), f"{target}")
     def sl_navigate(self,
         target: str
     ) -> None:
         self.clearln(0)
-        self.window.p.addstr(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
+        self.setLn(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
         ''' # for debug
         self.window.addstr(0, 0, 
             f"term: {self.entries.apps[self.buffer.pos].is_terminal} " +
@@ -67,17 +73,17 @@ class Gui:
             self.clearln(I)
             try:
                 if (self.buffer.pos == i):
-                    self.window.p.addstr(I, 0, f"{self.entries.apps[i].name}", curses.A_REVERSE | curses.A_BOLD)
+                    self.setLn(I, 0, f"{self.entries.apps[i].name}", curses.A_REVERSE | curses.A_BOLD)
                 else:
-                    self.window.p.addstr(I, 0, f"{self.entries.apps[i].name}")
+                    self.setLn(I, 0, f"{self.entries.apps[i].name}")
                 continue
             except Exception as e:
                 if (e == IndexError):
                     self.clearln(I)
-                    self.window.p.addstr(I, 0, "~")
+                    self.setLn(I, 0, "~")
                 pass
     
-
+    # TODO rename this (looping will be handled my window)
     def loop(self) -> None:
         self.is_running = True
         while (self.is_running):

@@ -70,6 +70,7 @@ class App:
 
 # handles apps
 class Entries:
+    w_data: Win_data
     # all visible apps
     apps: list[App]
     # filtered apps
@@ -107,9 +108,13 @@ class Entries:
                 apps.append(a_temp)
         
         return apps
-    def search(self) -> None:
+    def filter(self) -> None:
         pass
 
-    def __init__(self) -> None:
+    def __init__(self,
+        data: Win_data
+    ) -> None:
+        self.w_data = data
+
         self.apps = self.get()
-        pass
+        self.w_data.set_entries(self.apps)
