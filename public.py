@@ -33,6 +33,9 @@ class Win_data:
         self.entries = List
         self.entry_count = len(List)
 
+    #def set_misc(self) -> None:
+    #    self.
+
     def __init__(self,
         win: curses.window
     ) -> None:

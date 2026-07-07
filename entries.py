@@ -19,6 +19,13 @@ class App:
     ) -> str:
         p_cmd: str = cmd
 
+        p_cmd = p_cmd.replace("%F", "")
+        p_cmd = p_cmd.replace("%u", "")
+        p_cmd = p_cmd.replace("%U", "")
+        p_cmd = p_cmd.replace("%i", "")
+        # keep this one at last to not mess up the others
+        p_cmd = p_cmd.replace("%", "")
+
         return p_cmd
     
     '''
@@ -117,4 +124,5 @@ class Entries:
         self.w_data = data
 
         self.apps = self.get()
-        self.w_data.set_entries(self.apps)
+        # handled by the window in .init_objects
+        #self.w_data.set_entries(self.apps)

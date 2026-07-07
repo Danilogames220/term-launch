@@ -10,13 +10,6 @@ class Gui:
     # NOTE: this should be the only object to have direct acess to the other ones
     buffer: Buffer
     entries: Entries
-
-    # list of each app entry
-    apps: list[App]
-    is_running: bool = False
-    
-    # entry list offset
-    el_offset: int = 0;
     
     def clearln(self,
         pos: int, 
@@ -83,17 +76,12 @@ class Gui:
                     self.setLn(I, 0, "~")
                 pass
     
-    # TODO rename this (looping will be handled my window)
-    def loop(self) -> None:
-        self.is_running = True
-        while (self.is_running):
-            #self.window.addstr(1, 0, f"w: {self.size.x}; h: {self.size.y}")
-        
-            # draw parts of the gui
-            self.search_line("search")
-            self.entry_list()
+    def draw(self) -> None:
+        # draw parts of the gui
+        self.search_line("search")
+        self.entry_list()
 
-            self.buffer.loop()
+        #self.buffer.loop()
     
     def __init__(self, 
         dat: Win_data,

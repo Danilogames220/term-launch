@@ -32,15 +32,6 @@ class Buffer:
         self.cpos = clamp(self.cpos - 1, 0, self.pos_max + 1);
     # move cursor pos in the list
     def move_down(self) -> None:
-        '''
-        if (
-            self.pos - self.cpos - 1 
-            < 
-            self.cpos_max
-        ):
-            self.pos = self.cpos
-            return
-        '''
         self.pos = clamp(self.pos + 1, 0, self.pos_max);
         # move cpos if cursor goes offscreen
         if (
@@ -52,15 +43,6 @@ class Buffer:
             self.move_c_down() 
 
     def move_up(self) -> None:
-        '''
-        if (
-            self.pos - self.cpos - 1 
-            > 
-            self.cpos_max
-        ):
-            self.pos = self.cpos + self.cpos_max
-            return
-        '''
         self.pos = clamp(self.pos - 1, 0, self.pos_max);
         # move cpos if cursor goes offscreen
         if (
@@ -78,13 +60,15 @@ class Buffer:
         pass
     def select(self) -> None: 
         # selected app
-        s_app: App = self.entries.apps[self.pos]
+        s_app: App = self.w_data.entries[self.pos]
+        #s_app: App = self.w_data.entries[self.w_data.selected_entry_index]
+        #s_app: App = self.entries.apps[self.pos]
         exec_cmd: list[str] # s_app.ex_cmd
         
         #TERMINAL: str = "kitty"
 
         if (s_app.is_terminal):
-            exec_cmd = [TERMINAL] + self.entries.apps[self.pos].ex_cmd.split()
+            exec_cmd = [TERMINAL] + s_app.ex_cmd.split()
         else:
             exec_cmd = s_app.ex_cmd.split()
 
@@ -118,15 +102,14 @@ class Buffer:
     def __init__(self,
         data: Win_data,
         win: curses.window,     # window
-        ent: Entries            # entries pointer
+        #ent: Entries            # entries pointer
     ) -> None:
         self.w_data = data
         self.window = win
-        self.entries = ent
-        e_count: int = len(self.entries.apps) - 1
+        #self.entries = ent
 
-        self.pos_max = e_count 
-        self.cpos_max = win.getmaxyx()[0] - 2
+        self.pos_max = self.w_data.entry_count - 1 # not having this - 1 will draw a enpty entry
+        self.cpos_max = self.w_data.height - 2  #win.getmaxyx()[0] - 2
 
         self.keybinds = {
             modes.SEARCH: {

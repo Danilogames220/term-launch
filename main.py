@@ -19,6 +19,8 @@ class Window:
     gui: Gui;
     buffer: Buffer;
     entries: Entries;
+
+    is_running: bool = False;
     
     def init_objects(self,
         window: curses.window
@@ -26,8 +28,13 @@ class Window:
         self.data = Win_data(window)
 
         self.entries = Entries(self.data)
+        # set data variables
+        self.data.set_entries(self.entries.apps)
+        #self.data
 
-        self.buffer = Buffer(self.data, window, self.entries)
+
+        self.buffer = Buffer(self.data, window)
+
         self.gui = Gui(self.data, self.buffer, self.entries)
 
     # to avoid conflits with each object, the window will organize what each object will do when a new seach is done by the user
@@ -44,9 +51,12 @@ class Window:
         pass
     
     def loop(self) -> None:
-
-        # draw screen
-        self.gui.loop()
+        self.is_running = True
+        while (self.is_running):
+            # draw screen
+            self.gui.draw()
+            # get input
+            self.buffer.loop()
 
     def __init__(self, 
         win: curses.window
@@ -59,6 +69,6 @@ class Window:
         self.loop()
 
 def main(win: curses.window) -> None:
-    cwin: Window = Window(win)
+    Window(win)
 
 curses.wrapper(main)
