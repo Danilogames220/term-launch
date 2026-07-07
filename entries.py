@@ -18,6 +18,7 @@ class App:
     ) -> str:
         p_cmd: str = cmd
 
+        p_cmd = p_cmd.replace("%f", "")
         p_cmd = p_cmd.replace("%F", "")
         p_cmd = p_cmd.replace("%u", "")
         p_cmd = p_cmd.replace("%U", "")
