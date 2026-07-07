@@ -2,7 +2,6 @@ import curses
 import subprocess
 
 from public import *
-from entries import *
 
 class Buffer:
     w_data: Win_data;
@@ -11,8 +10,6 @@ class Buffer:
 
     # curent data search string
     data: str = "data";
-    # buffer mode
-    mode: modes = modes.NAV;
     # maximum cursor pos
     pos_max: int;
     cpos_max: int;
@@ -61,7 +58,7 @@ class Buffer:
 
     # NOTE: only works like this because it only has 2 modes
     def change_mode(self) -> None:
-        self.mode = modes(not self.mode.value)
+        self.w_data.mode = modes(not self.w_data.mode.value)
     def term(self) -> None:
         exit(0)
         pass
@@ -94,7 +91,7 @@ class Buffer:
 
         try:
             # NOTE: for some reason it wont run the dict functions unless i have Exception in except
-            self.keybinds[self.mode][k]()
+            self.keybinds[self.w_data.mode][k]()
         except Exception as e: 
             pass
 
@@ -109,7 +106,7 @@ class Buffer:
         self.w_data = data
 
         self.pos_max = self.w_data.entry_count - 1 # not having this - 1 will draw a enpty entry
-        self.cpos_max = self.w_data.height - 2  #win.getmaxyx()[0] - 2
+        self.cpos_max = self.w_data.height - 2
 
         self.keybinds = {
             modes.SEARCH: {

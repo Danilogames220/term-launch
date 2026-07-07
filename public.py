@@ -15,6 +15,13 @@ PATHS: list[str] = [
 ]
 '''
 
+
+
+# NOTE: if you add aother mode, change how Buffer.change_mode() works
+class modes(Enum):
+    SEARCH = 0
+    NAV = 1
+
 # wrapper for shared window data
 class Win_data:
     width: int = -1
@@ -26,6 +33,8 @@ class Win_data:
 
     entries: list[App]
     entry_count: int = 0;
+
+    mode: modes = modes.NAV
 
     def set_entries(self,
         List: list[App]
@@ -41,12 +50,6 @@ class Win_data:
     ) -> None:
         self.p = win
         self.height, self.width = self.p.getmaxyx()
-
-
-# NOTE: if you add aother mode, change how Buffer.change_mode() works
-class modes(Enum):
-    SEARCH = 0
-    NAV = 1
 
 # keeps a value between x and y
 def clamp(n: int, x: int, y: int = 0) -> int:

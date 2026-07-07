@@ -31,11 +31,9 @@ class Window:
         # set data variables
         self.data.set_entries(self.entries.apps)
         #self.data
-
-
         self.buffer = Buffer(self.data)
 
-        self.gui = Gui(self.data, self.buffer, self.entries)
+        self.gui = Gui(self.data)
 
     # to avoid conflits with each object, the window will organize what each object will do when a new seach is done by the user
     def new_query(self) -> None:

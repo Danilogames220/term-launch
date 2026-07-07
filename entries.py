@@ -3,7 +3,6 @@ from pathlib import Path
 
 from public import *
 
-
 # Holds data of each app
 class App:
     name: str;
