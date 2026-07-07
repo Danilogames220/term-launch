@@ -13,9 +13,6 @@ class Buffer:
     data: str = "data";
     # buffer mode
     mode: modes = modes.NAV;
-    # current app selected of self.entries
-    pos: int = 0;
-    cpos: int = 0;
     # maximum cursor pos
     pos_max: int;
     cpos_max: int;
@@ -27,28 +24,38 @@ class Buffer:
 
     # move list offset only
     def move_c_down(self) -> None:
-        self.cpos = clamp(self.cpos + 1, 0, self.pos_max + 1);
+        self.w_data.list_display_offset = clamp(
+                self.w_data.list_display_offset + 1, 
+                0, self.pos_max + 1
+        );
     def move_c_up(self) -> None:
-        self.cpos = clamp(self.cpos - 1, 0, self.pos_max + 1);
+        self.w_data.list_display_offset = clamp(
+                self.w_data.list_display_offset - 1, 
+                0, self.pos_max + 1
+        );
     # move cursor pos in the list
     def move_down(self) -> None:
-        self.pos = clamp(self.pos + 1, 0, self.pos_max);
+        self.w_data.selected_entry_index = clamp(
+                self.w_data.selected_entry_index + 1, 
+        0, self.pos_max);
         # move cpos if cursor goes offscreen
         if (
-            self.pos - self.cpos
+            self.w_data.selected_entry_index - self.w_data.list_display_offset
             >
+            #self.w_data.list_display_offset
             self.cpos_max
-            #self.cpos_max
         ):
             self.move_c_down() 
 
     def move_up(self) -> None:
-        self.pos = clamp(self.pos - 1, 0, self.pos_max);
+        self.w_data.selected_entry_index = clamp(
+                self.w_data.selected_entry_index - 1, 
+        0, self.pos_max);
         # move cpos if cursor goes offscreen
         if (
-            self.pos 
+            self.w_data.selected_entry_index 
             < 
-            self.cpos
+            self.w_data.list_display_offset
         ):
             self.move_c_up() 
 
@@ -60,12 +67,9 @@ class Buffer:
         pass
     def select(self) -> None: 
         # selected app
-        s_app: App = self.w_data.entries[self.pos]
+        s_app: App = self.w_data.entries[self.w_data.selected_entry_index]
         #s_app: App = self.w_data.entries[self.w_data.selected_entry_index]
-        #s_app: App = self.entries.apps[self.pos]
         exec_cmd: list[str] # s_app.ex_cmd
-        
-        #TERMINAL: str = "kitty"
 
         if (s_app.is_terminal):
             exec_cmd = [TERMINAL] + s_app.ex_cmd.split()
@@ -86,7 +90,7 @@ class Buffer:
     # handles keypress
     def parse_keypress(self) -> None:
         # current key pressed
-        k: int = self.window.getch()
+        k: int = self.w_data.p.getch()
 
         try:
             # NOTE: for some reason it wont run the dict functions unless i have Exception in except
@@ -100,13 +104,9 @@ class Buffer:
         self.parse_keypress()
     
     def __init__(self,
-        data: Win_data,
-        win: curses.window,     # window
-        #ent: Entries            # entries pointer
+        data: Win_data
     ) -> None:
         self.w_data = data
-        self.window = win
-        #self.entries = ent
 
         self.pos_max = self.w_data.entry_count - 1 # not having this - 1 will draw a enpty entry
         self.cpos_max = self.w_data.height - 2  #win.getmaxyx()[0] - 2

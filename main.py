@@ -33,7 +33,7 @@ class Window:
         #self.data
 
 
-        self.buffer = Buffer(self.data, window)
+        self.buffer = Buffer(self.data)
 
         self.gui = Gui(self.data, self.buffer, self.entries)
 

@@ -36,12 +36,6 @@ class Gui:
     ) -> None:
         self.clearln(0)
         self.setLn(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
-        ''' # for debug
-        self.window.addstr(0, 0, 
-            f"term: {self.entries.apps[self.buffer.pos].is_terminal} " +
-            f"path: {self.entries.apps[self.buffer.pos].path} "
-        )
-        '''
 
     sl_modes: dict[modes, callable] = {
         modes.SEARCH: sl_search,
@@ -61,11 +55,12 @@ class Gui:
         for I in range(1, lsize):
             # actual index
             #i: int = self.el_offset + I - 1
-            i: int = self.buffer.cpos + I - 1
+            i: int = self.window.list_display_offset + I - 1
+            #i: int = self.window.list_display_offset + I - 1
             
             self.clearln(I)
             try:
-                if (self.buffer.pos == i):
+                if (self.window.selected_entry_index == i):
                     self.setLn(I, 0, f"{self.entries.apps[i].name}", curses.A_REVERSE | curses.A_BOLD)
                 else:
                     self.setLn(I, 0, f"{self.entries.apps[i].name}")
@@ -80,8 +75,6 @@ class Gui:
         # draw parts of the gui
         self.search_line("search")
         self.entry_list()
-
-        #self.buffer.loop()
     
     def __init__(self, 
         dat: Win_data,
