@@ -15,8 +15,6 @@ PATHS: list[str] = [
 ]
 '''
 
-
-
 # NOTE: if you add aother mode, change how Buffer.change_mode() works
 class modes(Enum):
     SEARCH = 0
