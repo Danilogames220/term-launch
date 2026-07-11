@@ -22,16 +22,15 @@ class Gui:
     
 
 # ----- SEACH LINE ----- #
+# TODO: if the search text is too big it overflows to the next line
     # search line mode styles
-    def sl_search(self, 
-        target: str
+    def sl_search(self
     ) -> None:
         self.clearln(0)
         t: str = " Search: "
         self.setLn(0, 0, " Search:", curses.A_BOLD | curses.A_UNDERLINE)
-        self.setLn(0, len(t), f"{target}")
-    def sl_navigate(self,
-        target: str
+        self.setLn(0, len(t), f"{self.window.query_target}")
+    def sl_navigate(self
     ) -> None:
         self.clearln(0)
         self.setLn(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
@@ -43,10 +42,9 @@ class Gui:
     };
 
     # draw search line
-    def search_line(self,
-            target: str
+    def search_line(self
     ) -> None:
-        self.sl_modes[self.window.mode](self=self, target="target")
+        self.sl_modes[self.window.mode](self=self)
 
 
 # ----- ENTRY LIST ----- #
@@ -74,9 +72,12 @@ class Gui:
 
 # ----- MAIN ----- #
     def draw(self) -> None:
+        curses.curs_set(0)
         # draw parts of the gui
-        self.search_line("search")
         self.entry_list()
+        if (self.window.mode == modes.SEARCH):
+            curses.curs_set(1)
+        self.search_line()
     
     def __init__(self, 
         dat: Win_data

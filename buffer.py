@@ -9,7 +9,7 @@ class Buffer:
     entries: Entries;
 
     # curent data search string
-    data: str = "data";
+    data: str = "";
     # maximum cursor pos
     pos_max: int;
     cpos_max: int;
@@ -80,14 +80,22 @@ class Buffer:
         exit(0)
 
     # handles input for seach data
-    def add_chr(self) -> str:
-        return ""
+    def add_chr(self, k: int) -> None:
+        if (32 <= k <= 125):
+            self.data += chr(k)
+        
+        if (k == 263):
+            self.data = self.data[:-1]
+        self.w_data.query_target = self.data
 
     # handles keypress
     def parse_keypress(self) -> None:
         # current key pressed
         k: int = self.w_data.p.getch()
-
+        
+        # get keys between [32...125] to add to data
+        if (self.w_data.mode == modes.SEARCH):
+            self.add_chr(k)
         try:
             # NOTE: for some reason it wont run the dict functions unless i have Exception in except
             self.keybinds[self.w_data.mode][k]()

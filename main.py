@@ -60,7 +60,6 @@ class Window:
         win: curses.window
     ) -> None:
         curses.set_escdelay(1) # get esc press intantly
-        curses.curs_set(0)     # hide terminal cursor
         
         self.init_objects(win)
         

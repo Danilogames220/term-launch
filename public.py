@@ -32,6 +32,11 @@ class Win_data:
     entries: list[App]
     entry_count: int = 0;
 
+    query_target: str = ""
+    # for Gui class
+    # if it is at the end of the query(as usualy), then its value should be len(query_target)
+    query_cursor_pos: int = 0
+
     mode: modes = modes.NAV
 
     def set_entries(self,
