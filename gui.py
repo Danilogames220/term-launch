@@ -35,6 +35,7 @@ class Gui:
     ) -> None:
         self.clearln(0)
         self.setLn(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
+        #self.setLn(0, 0, f"cmd = {self.window.entries[self.window.selected_entry_index].ex_cmd}")
 
     sl_modes: dict[modes, callable] = {
         modes.SEARCH: sl_search,

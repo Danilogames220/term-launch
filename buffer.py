@@ -65,7 +65,6 @@ class Buffer:
     def select(self) -> None: 
         # selected app
         s_app: App = self.w_data.entries[self.w_data.selected_entry_index]
-        #s_app: App = self.w_data.entries[self.w_data.selected_entry_index]
         exec_cmd: list[str] # s_app.ex_cmd
 
         if (s_app.is_terminal):
@@ -74,9 +73,9 @@ class Buffer:
             exec_cmd = s_app.ex_cmd.split()
 
         subprocess.Popen(
-            exec_cmd, 
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
+            exec_cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.STDOUT
         ) 
         exit(0)
 
