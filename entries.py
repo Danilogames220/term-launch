@@ -1,6 +1,4 @@
 import os
-from pathlib import Path
-
 from public import *
 
 # Holds data of each app
@@ -23,8 +21,7 @@ class App:
         p_cmd = p_cmd.replace("%u", "")
         p_cmd = p_cmd.replace("%U", "")
         p_cmd = p_cmd.replace("%i", "")
-        # keep this one at last to not mess up the others
-        p_cmd = p_cmd.replace("%", "")
+        p_cmd = p_cmd.replace("%", "") # keep this one at last to not mess up the others
 
         return p_cmd
     
@@ -32,8 +29,6 @@ class App:
     def __init__(self, path: str):
         self.path = path
         self.name = ""
-
-        raw_cmd: str = ""
         
         with open(path) as f:
             def check(l: str, arg: str) -> bool:
@@ -60,27 +55,12 @@ class App:
 class Entries:
     w_data: Win_data
     paths: list[str]
+    terminal: str
     # all visible apps
     apps: list[App]
     # filtered apps
-    # covered by Win_data
-    #filtered_apps: list[App]
-
     
-    # TODO: put some multithreading on this function
-    def get(self,
-    ) -> list[App]:
-        '''
-        homed: str = f"{Path.home()}"
-        paths: list[str] = [
-            "/usr/share/applications/",
-            "/usr/local/share/applications/",
-            f"{homed}/.local/share/applications/",
-        ]
-        '''
-        #paths: list[str] = PATHS
-
-
+    def get(self) -> list[App]:
         files: list = []; 
         for d in self.paths:
             try:
@@ -92,15 +72,21 @@ class Entries:
         apps: list[App] = []
     
         for p in files:
-            # check if is a .desktop file
+            # check if it's a .desktop file
             ext: str = "desktop"
             if not (p[len(p) - len(ext):] == ext):
                     continue
             
-            # check if is a hidden entry
+            # check if it's a hidden entry
             a_temp: App = App(p)
-            if (not a_temp.is_hidden):
-                apps.append(a_temp)
+            if (a_temp.is_hidden):
+                continue
+
+            # add terminal to start of the command if it's a terminal app
+            if (a_temp.is_terminal):
+                a_temp.ex_cmd = f"{self.terminal} " + a_temp.ex_cmd
+
+            apps.append(a_temp)
         
         return apps
 
@@ -120,11 +106,12 @@ class Entries:
 
     def __init__(self,
         data: Win_data,
-        paths: list[str]
+        paths: list[str],
+        terminal: str
     ) -> None:
         self.w_data = data
         self.paths = paths
+        self.terminal = terminal
 
         self.apps = self.get()
-        # handled by the window in .init_objects
-        #self.w_data.set_entries(self.apps)
+

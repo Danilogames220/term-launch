@@ -1,12 +1,10 @@
 import curses
 
 from public import *
-#from entries import *
 
 # handles gui
 class Gui:
     window: Win_data
-    # NOTE: this should be the only object to have direct acess to the other ones
     
     def clearln(self,
         pos: int, 
@@ -21,7 +19,7 @@ class Gui:
         self.window.p.addstr(line, row, text, curses_style)
     
 
-# ----- SEACH LINE ----- #
+# ----- SEARCH LINE ----- #
 # TODO: if the search text is too big it overflows to the next line
     # search line mode styles
     def sl_search(self
@@ -80,7 +78,6 @@ class Gui:
 # ----- MAIN ----- #
     def draw(self) -> None:
         curses.curs_set(0)
-        # draw parts of the gui
         self.entry_list()
         if (self.window.mode == modes.SEARCH):
             curses.curs_set(1)

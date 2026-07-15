@@ -1,5 +1,6 @@
 from enum import Enum
 import curses
+from pathlib import Path
 
 from entries import *
 
@@ -34,7 +35,7 @@ class Win_data:
     query_target: str = ""
     # for Gui class
     # horizontal position of the cursor when typing in search mode
-    query_cursor_pos: int = 0
+    # query_cursor_pos: int = 0
 
     mode: modes = modes.SEARCH
 
@@ -60,4 +61,3 @@ def clamp(n: int, x: int, y: int = 0) -> int:
     if n > y:
         return y
     return n
-    #return n % x

@@ -1,3 +1,13 @@
+# TODO:
+# - find a way to compile this
+# - add a way to the user to set the TERMINAL variable without recompiling
+#   - command line argument
+#   - config file
+# - add app icon support to terminals that support images
+# - config file
+# - horizontal cursor movement in search mode
+# - fix search text overflow
+
 import curses
 # files
 from public import *
@@ -27,7 +37,7 @@ class Window:
     ) -> None:
         self.data = Win_data(window)
 
-        self.entries = Entries(self.data, PATHS)
+        self.entries = Entries(self.data, PATHS, TERMINAL)
         # set data variables
         self.data.set_entries(self.entries.apps)
         #self.data
@@ -35,7 +45,6 @@ class Window:
 
         self.gui = Gui(self.data)
 
-    # to avoid conflits with each object, the window will organize what each object will do when a new seach is done by the user
     # store last search text so that when the app list resizes, the current pos isn't at somewhere it shoudn't be
     last_search: str = ""
     def new_query(self) -> None:
@@ -60,7 +69,7 @@ class Window:
     def __init__(self, 
         win: curses.window
     ) -> None:
-        curses.set_escdelay(1) # get esc press intantly
+        curses.set_escdelay(1) # no esc press delay
         
         self.init_objects(win)
         

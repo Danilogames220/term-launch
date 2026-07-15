@@ -8,18 +8,19 @@ class Buffer:
     window: curses.window;
     entries: Entries;
 
-    # curent data search string
+    # string to search apps
     data: str = "";
-    # maximum cursor pos
+    # maximum cursor position
     pos_max: int;
     cpos_max: int;
     
-    # keybinds are set inside __init__
-    # first int is the mode for that keybind to trigger
-    # second int is for key ascii code
+    # NOTE: keybinds can only be set inside __init__
+    # modes: the mode where the keybind can trigger
+    # dict.int: key value
+    # dict.callable: function to trigger
     keybinds: dict[modes, dict[int, callable]]; 
 
-    # move list offset only
+    # moves entry list offset
     def move_c_down(self) -> None:
         self.w_data.list_display_offset = clamp(
                 self.w_data.list_display_offset + 1, 
@@ -30,7 +31,7 @@ class Buffer:
                 self.w_data.list_display_offset - 1, 
                 0, self.pos_max + 1
         );
-    # move cursor pos in the list
+    # moves selected entry
     def move_down(self) -> None:
         self.w_data.selected_entry_index = clamp(
                 self.w_data.selected_entry_index + 1, 
@@ -39,11 +40,9 @@ class Buffer:
         if (
             self.w_data.selected_entry_index - self.w_data.list_display_offset
             >
-            #self.w_data.list_display_offset
             self.cpos_max
         ):
             self.move_c_down() 
-
     def move_up(self) -> None:
         self.w_data.selected_entry_index = clamp(
                 self.w_data.selected_entry_index - 1, 
@@ -65,12 +64,7 @@ class Buffer:
     def select(self) -> None: 
         # selected app
         s_app: App = self.w_data.entries[self.w_data.selected_entry_index]
-        exec_cmd: list[str] # s_app.ex_cmd
-
-        if (s_app.is_terminal):
-            exec_cmd = [TERMINAL] + s_app.ex_cmd.split()
-        else:
-            exec_cmd = s_app.ex_cmd.split()
+        exec_cmd: list[str] = s_app.ex_cmd.split()
 
         subprocess.Popen(
             exec_cmd,
@@ -97,13 +91,12 @@ class Buffer:
         if (self.w_data.mode == modes.SEARCH):
             self.add_chr(k)
         try:
-            # NOTE: for some reason it wont run the dict functions unless i have Exception in except
+            # NOTE: for some reason it wont run the dict functions unless it catches the exception 
             self.keybinds[self.w_data.mode][k]()
         except Exception as e: 
             pass
 
     # runs after each time gui draws
-    # TODO rename this (looping will be handled my window)
     def loop(self) -> None:
         self.parse_keypress()
     
@@ -112,9 +105,10 @@ class Buffer:
     ) -> None:
         self.w_data = data
 
-        self.pos_max = self.w_data.entry_count - 1 # not having this - 1 will draw a enpty entry
+        self.pos_max = self.w_data.entry_count - 1 # not having this - 1 will draw a empty entry
         self.cpos_max = self.w_data.height - 2
 
+# ----- KEYBINDS ----- #
         self.keybinds = {
             modes.SEARCH: {
                 # esc
