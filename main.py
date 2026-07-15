@@ -27,7 +27,7 @@ class Window:
     ) -> None:
         self.data = Win_data(window)
 
-        self.entries = Entries(self.data)
+        self.entries = Entries(self.data, PATHS)
         # set data variables
         self.data.set_entries(self.entries.apps)
         #self.data
@@ -42,6 +42,7 @@ class Window:
         text: str = self.buffer.data # get text
         if (text.upper() != self.last_search.upper()):
             self.data.selected_entry_index = 0
+            self.data.list_display_offset = 0
         
         self.data.set_entries(self.entries.filter(text))
         self.last_search = text

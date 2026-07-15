@@ -34,7 +34,6 @@ class Gui:
     ) -> None:
         self.clearln(0)
         self.setLn(0, 0, "󰆾 Navigate", curses.A_BOLD| curses.A_UNDERLINE)
-        #self.setLn(0, 0, f"cmd = {self.window.entries[self.window.selected_entry_index].ex_cmd}")
 
     sl_modes: dict[modes, callable] = {
         modes.SEARCH: sl_search,
@@ -74,10 +73,9 @@ class Gui:
                     self.setLn(I, 0, f"{entry[i].name}")
                 continue
             except Exception as e:
-                if (e == IndexError):
+                if (type(e) == IndexError):
                     self.clearln(I)
                     self.setLn(I, 0, "~")
-                pass
 
 # ----- MAIN ----- #
     def draw(self) -> None:

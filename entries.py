@@ -28,25 +28,6 @@ class App:
 
         return p_cmd
     
-    '''
-    # functions to do for each thing found
-    def p_name(self, l: str) -> Bool:
-        return True
-    def p_hidden(self, l: str) -> Bool:
-        return True
-    def p_exec(self, l: str) -> Bool:
-        return True
-
-    def parse_file(self,
-        path: str
-    ) -> None:
-        for line in path:
-            try:
-                pass
-            except:
-                pass
-        pass
-    '''
 
     def __init__(self, path: str):
         self.path = path
@@ -78,6 +59,7 @@ class App:
 # handles apps
 class Entries:
     w_data: Win_data
+    paths: list[str]
     # all visible apps
     apps: list[App]
     # filtered apps
@@ -86,16 +68,21 @@ class Entries:
 
     
     # TODO: put some multithreading on this function
-    def get(self) -> list[App]:
+    def get(self,
+    ) -> list[App]:
+        '''
         homed: str = f"{Path.home()}"
         paths: list[str] = [
             "/usr/share/applications/",
             "/usr/local/share/applications/",
             f"{homed}/.local/share/applications/",
         ]
+        '''
+        #paths: list[str] = PATHS
+
 
         files: list = []; 
-        for d in paths:
+        for d in self.paths:
             try:
                 for f in os.listdir(d):
                     files.append(d + f)
@@ -132,9 +119,11 @@ class Entries:
         return f_entries
 
     def __init__(self,
-        data: Win_data
+        data: Win_data,
+        paths: list[str]
     ) -> None:
         self.w_data = data
+        self.paths = paths
 
         self.apps = self.get()
         # handled by the window in .init_objects
