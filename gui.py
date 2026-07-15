@@ -51,6 +51,15 @@ class Gui:
     # show entry list
     def entry_list(self) -> None:
         lsize: int = self.window.height
+        
+        # thing to show if there's no app to draw
+        if (len(self.window.entries) == 0):
+            for i in range(1, lsize):
+                self.clearln(i)
+            
+            self.setLn(1, 0, f"No app found :/")
+            return
+
 
         for I in range(1, lsize):
             # actual index

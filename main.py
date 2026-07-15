@@ -36,21 +36,21 @@ class Window:
         self.gui = Gui(self.data)
 
     # to avoid conflits with each object, the window will organize what each object will do when a new seach is done by the user
+    # store last search text so that when the app list resizes, the current pos isn't at somewhere it shoudn't be
+    last_search: str = ""
     def new_query(self) -> None:
-        # - text from buffer is passed to entries
-        # - entries filters the apps
-        # - entries returns the filtered apps to win_data
-        # > do this then draw the screen
-        #
-        # text: str = self.buffer.get_text() # get text
-        # self.entries.filter(text)
-        # data.set_entries(self.entries.filtered_apps)
+        text: str = self.buffer.data # get text
+        if (text.upper() != self.last_search.upper()):
+            self.data.selected_entry_index = 0
         
-        pass
-    
+        self.data.set_entries(self.entries.filter(text))
+        self.last_search = text
+
     def loop(self) -> None:
         self.is_running = True
         while (self.is_running):
+            # filter
+            self.new_query()
             # draw screen
             self.gui.draw()
             # get input

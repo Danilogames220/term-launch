@@ -81,10 +81,11 @@ class Entries:
     # all visible apps
     apps: list[App]
     # filtered apps
-    filtered_apps: list[App]
+    # covered by Win_data
+    #filtered_apps: list[App]
 
     
-    # TODO: make this get all entries at the same time
+    # TODO: put some multithreading on this function
     def get(self) -> list[App]:
         homed: str = f"{Path.home()}"
         paths: list[str] = [
@@ -115,8 +116,20 @@ class Entries:
                 apps.append(a_temp)
         
         return apps
-    def filter(self) -> None:
-        pass
+
+    # returns a new list of apps based that match their name with text
+    def filter(self,
+        text: str
+    ) -> list[App]:
+        if (text == ""):
+            return self.apps
+
+        f_entries: list[App] = []
+        for app in self.apps:
+            # set both to uppercase so that the search isn't case sensitive
+            if (text.upper() in app.name.upper()):
+                f_entries.append(app)
+        return f_entries
 
     def __init__(self,
         data: Win_data
