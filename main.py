@@ -6,6 +6,7 @@
 # - fix search text overflow
 
 import curses
+from os import 
 import sys
 from pathlib import Path
 # files
@@ -21,6 +22,7 @@ class Win_args:
         "/usr/local/share/applications/",
         "~/.local/share/applications/",
     ]
+    terminal: str = ""
 
     def __init__(self):
         args: list[str] = sys.argv[1:]
@@ -31,7 +33,11 @@ class Win_args:
         if ("-h" in args) or ("--help" in args):
             print(
 f"""Usage: terml [Options]
--p --paths   Directories to look for apps (dir1;dir2;dir3;...)
+-t= --terminal=  Launch terminal apps in a new terminal window. 
+                 if =NULL or unset, terminal apps will launch 
+                 on the same terminal that the program ran.
+-p --paths       Directories to look for apps (dir1/;dir2/;dir3/;...).
+                 You can't use "./" in the paths
 
 When paths are not specified, the defaults are:""")
             for p in self.paths:
@@ -45,11 +51,18 @@ Source code:
         # get dirs passed by the user
         p_pos: int = 0
         for arg in args:
+            # handle terminal flag
+            if ("-t=" in arg):
+                self.terminal = arg.replace("-t=", "")
+            if ("--terminal=" in arg):
+                self.terminal = arg.replace("--terminal=", "")
+
             if (arg == "-p") or (arg == "--paths"):
                 break
             p_pos += 1
         try:
-            self.paths = args[p_pos + 1].split(";")
+            if ("-p" in args) or ("--paths" in args):
+                self.paths = args[p_pos + 1].split(";")
         except Exception as e:
             if (type(e) != IndexError):
                 raise e
@@ -57,6 +70,8 @@ Source code:
             exit(0)
         
         # replace ~ with home dir
+        if (self.terminal == "NULL"):
+            self.terminal = ""
         t_paths: list[str] = []
         for p in self.paths:
             t_paths.append(p.replace("~", f"{Path.home()}"))
@@ -83,7 +98,7 @@ class Window:
     def init_objects(self,
         window: curses.window
     ) -> None:
-        self.data = Win_data(window)
+        self.data = Win_data(window, self.args.terminal)
 
         self.entries = Entries(self.data, self.args.paths)
         # set data variables

@@ -1,16 +1,7 @@
 from enum import Enum
 import curses
-from pathlib import Path
 
 from entries import *
-
-# dirs to pull app entries from
-HOMED: str = f"{Path.home()}"
-PATHS: list[str] = [
-    "/usr/share/applications/",
-    "/usr/local/share/applications/",
-    f"{HOMED}/.local/share/applications/",
-]
 
 # NOTE: if you add aother mode, change how Buffer.change_mode() works
 class modes(Enum):
@@ -37,7 +28,7 @@ class Win_data:
     mode: modes = modes.SEARCH
 
     terminal: str;
-    paths: list[str];
+    #paths: list[str];
 
     def set_entries(self,
         List: list[App]
@@ -46,9 +37,11 @@ class Win_data:
         self.entry_count = len(List)
 
     def __init__(self,
-        win: curses.window
+        win: curses.window,
+        term: str
     ) -> None:
         self.p = win
+        self.terminal = term
         self.height, self.width = self.p.getmaxyx()
         
 

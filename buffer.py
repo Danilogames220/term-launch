@@ -67,11 +67,18 @@ class Buffer:
         exec_cmd: list[str] = s_app.ex_cmd.split()
         
         if (s_app.is_terminal):
-            subprocess.run(
-                exec_cmd
-                #stdout=subprocess.DEVNULL,
-                #stderr=subprocess.STDOUT
-            )
+            if (self.w_data.terminal == ""):
+                subprocess.run(
+                    exec_cmd
+                    #stdout=subprocess.DEVNULL,
+                    #stderr=subprocess.STDOUT
+                )
+            else:
+                subprocess.Popen(
+                    [self.w_data.terminal] + exec_cmd,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.STDOUT
+                ) 
         else:
             subprocess.Popen(
                 exec_cmd,
