@@ -6,30 +6,34 @@
 # - fix search text overflow
 
 import curses
+import sys
+from pathlib import Path
 # files
 from public import *
 from gui import *
 from buffer import *
 from entries import *
 
-import sys
+# This could have its own file
 class Win_args:
     paths: list[str] = [
         "/usr/share/applications/",
         "/usr/local/share/applications/",
-        f"~/.local/share/applications/",
+        "~/.local/share/applications/",
     ]
 
     def __init__(self):
         args: list[str] = sys.argv[1:]
+
+        if (args == []):
+            return
 
         if ("-h" in args) or ("--help" in args):
             print(
 f"""Usage: terml [Options]
 -p --paths   Directories to look for apps (dir1;dir2;dir3;...)
 
-When no options are specified, the defaults are:
-paths:""")
+When paths are not specified, the defaults are:""")
             for p in self.paths:
                 print(p)
 
@@ -38,12 +42,26 @@ Source code:
 <https://github.com/danilogames220/term-launch>""")
             exit(0)
         
-        # position of the flags in args
-        t_pos: int = -1
-        d_pos: int = -1
+        # get dirs passed by the user
+        p_pos: int = 0
         for arg in args:
             if (arg == "-p") or (arg == "--paths"):
-                pass
+                break
+            p_pos += 1
+        try:
+            self.paths = args[p_pos + 1].split(";")
+        except Exception as e:
+            if (type(e) != IndexError):
+                raise e
+            print("ERROR: No paths provided")
+            exit(0)
+        
+        # replace ~ with home dir
+        t_paths: list[str] = []
+        for p in self.paths:
+            t_paths.append(p.replace("~", f"{Path.home()}"))
+        self.paths = t_paths
+        
 # NOTE:
 # - Things that require managing multiple objects at once (like filtering apps, etc...) should be done by the window. This is to make the code better to manage
 # 
@@ -67,7 +85,7 @@ class Window:
     ) -> None:
         self.data = Win_data(window)
 
-        self.entries = Entries(self.data, PATHS)
+        self.entries = Entries(self.data, self.args.paths)
         # set data variables
         self.data.set_entries(self.entries.apps)
         #self.data
