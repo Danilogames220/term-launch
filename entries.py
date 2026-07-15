@@ -55,7 +55,6 @@ class App:
 class Entries:
     w_data: Win_data
     paths: list[str]
-    terminal: str
     # all visible apps
     apps: list[App]
     # filtered apps
@@ -82,10 +81,6 @@ class Entries:
             if (a_temp.is_hidden):
                 continue
 
-            # add terminal to start of the command if it's a terminal app
-            if (a_temp.is_terminal):
-                a_temp.ex_cmd = f"{self.terminal} " + a_temp.ex_cmd
-
             apps.append(a_temp)
         
         return apps
@@ -106,12 +101,10 @@ class Entries:
 
     def __init__(self,
         data: Win_data,
-        paths: list[str],
-        terminal: str
+        paths: list[str]
     ) -> None:
         self.w_data = data
         self.paths = paths
-        self.terminal = terminal
 
         self.apps = self.get()
 

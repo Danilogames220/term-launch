@@ -17,7 +17,6 @@ from entries import *
 
 import sys
 class Win_args:
-    terminal: str = "kitty"
     paths: list[str] = [
         "/usr/share/applications/",
         "/usr/local/share/applications/",
@@ -31,11 +30,9 @@ class Win_args:
         if ("-h" in args) or ("--help" in args):
             print(
 f"""Usage: terml [Options]
--t --terminal   Terminal to use when launching terminal apps
--d --paths      Paths to look for apps
+-d --dirs      Directories to look for apps (dir1;dir2;dir3;...)
 
 When no options are specified, the defaults are:
-terminal: {self.terminal}
 paths:""")
             for p in self.paths:
                 print(p)
@@ -44,7 +41,13 @@ paths:""")
 Source code:
 <https://github.com/danilogames220/term-launch>""")
             exit(0)
-
+        
+        # position of the flags in args
+        t_pos: int = -1
+        d_pos: int = -1
+        for arg in args:
+            if (arg == "-d") or (arg == "--dirs"):
+                pass
 # NOTE:
 # - Things that require managing multiple objects at once (like filtering apps, etc...) should be done by the window. This is to make the code better to manage
 # 
@@ -68,7 +71,7 @@ class Window:
     ) -> None:
         self.data = Win_data(window)
 
-        self.entries = Entries(self.data, PATHS, TERMINAL)
+        self.entries = Entries(self.data, PATHS)
         # set data variables
         self.data.set_entries(self.entries.apps)
         #self.data

@@ -4,9 +4,6 @@ from pathlib import Path
 
 from entries import *
 
-# customize these variables before compiling
-# terminal to launch terminal apps
-TERMINAL: str = "kitty"
 # dirs to pull app entries from
 HOMED: str = f"{Path.home()}"
 PATHS: list[str] = [

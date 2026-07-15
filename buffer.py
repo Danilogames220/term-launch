@@ -65,12 +65,19 @@ class Buffer:
         # selected app
         s_app: App = self.w_data.entries[self.w_data.selected_entry_index]
         exec_cmd: list[str] = s_app.ex_cmd.split()
-
-        subprocess.Popen(
-            exec_cmd,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.STDOUT
-        ) 
+        
+        if (s_app.is_terminal):
+            subprocess.run(
+                exec_cmd
+                #stdout=subprocess.DEVNULL,
+                #stderr=subprocess.STDOUT
+            )
+        else:
+            subprocess.Popen(
+                exec_cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT
+            ) 
         exit(0)
 
     # handles input for seach data
