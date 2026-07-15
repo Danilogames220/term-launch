@@ -1,8 +1,5 @@
 # TODO:
 # - find a way to compile this
-# - add a way to the user to set the TERMINAL variable without recompiling
-#   - command line argument
-#   - config file
 # - add app icon support to terminals that support images
 # - config file
 # - horizontal cursor movement in search mode
@@ -20,7 +17,6 @@ class Win_args:
     paths: list[str] = [
         "/usr/share/applications/",
         "/usr/local/share/applications/",
-        #f"{HOMED}/.local/share/applications/",
         f"~/.local/share/applications/",
     ]
 
@@ -30,7 +26,7 @@ class Win_args:
         if ("-h" in args) or ("--help" in args):
             print(
 f"""Usage: terml [Options]
--d --dirs      Directories to look for apps (dir1;dir2;dir3;...)
+-p --paths   Directories to look for apps (dir1;dir2;dir3;...)
 
 When no options are specified, the defaults are:
 paths:""")
@@ -46,7 +42,7 @@ Source code:
         t_pos: int = -1
         d_pos: int = -1
         for arg in args:
-            if (arg == "-d") or (arg == "--dirs"):
+            if (arg == "-p") or (arg == "--paths"):
                 pass
 # NOTE:
 # - Things that require managing multiple objects at once (like filtering apps, etc...) should be done by the window. This is to make the code better to manage

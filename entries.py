@@ -7,7 +7,7 @@ class App:
     path: str;
     raw_cmd: str;
 
-    ex_cmd: str;
+    ex_cmd: str = "";
     is_hidden: bool = False
     is_terminal: bool = False
     
@@ -18,7 +18,7 @@ class App:
 
         p_cmd = p_cmd.replace("%f", "")
         p_cmd = p_cmd.replace("%F", "")
-        p_cmd = p_cmd.replace("%u", "")
+        p_cmd = p_cmd.replace("%u", os.getcwd())
         p_cmd = p_cmd.replace("%U", "")
         p_cmd = p_cmd.replace("%i", "")
         p_cmd = p_cmd.replace("%", "") # keep this one at last to not mess up the others
@@ -40,8 +40,8 @@ class App:
                     self.name = line.split("Name=")[1]
                     #self.name = line[line.find("Name="):]
                 # find app launch command
-                if (check(line, "Exec=")):
-                    self.ex_cmd = self.parse_cmd(line.split("Exec=")[1])
+                if (check(line, "Exec=")) and (self.ex_cmd == ""):
+                    self.ex_cmd = line.split("Exec=")[1]
 
                 # check if app is hidden 
                 if (check(line, "NoDisplay=true")) or (check(line, "Hidden=true")):
