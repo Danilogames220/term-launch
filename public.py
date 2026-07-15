@@ -39,20 +39,21 @@ class Win_data:
 
     mode: modes = modes.SEARCH
 
+    terminal: str;
+    paths: list[str];
+
     def set_entries(self,
         List: list[App]
     ) -> None:
         self.entries = List
         self.entry_count = len(List)
 
-    #def set_misc(self) -> None:
-    #    self.
-
     def __init__(self,
         win: curses.window
     ) -> None:
         self.p = win
         self.height, self.width = self.p.getmaxyx()
+        
 
 # keeps a value between x and y
 def clamp(n: int, x: int, y: int = 0) -> int:

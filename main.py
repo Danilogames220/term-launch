@@ -15,6 +15,36 @@ from gui import *
 from buffer import *
 from entries import *
 
+import sys
+class Win_args:
+    terminal: str = "kitty"
+    paths: list[str] = [
+        "/usr/share/applications/",
+        "/usr/local/share/applications/",
+        #f"{HOMED}/.local/share/applications/",
+        f"~/.local/share/applications/",
+    ]
+
+    def __init__(self):
+        args: list[str] = sys.argv[1:]
+
+        if ("-h" in args) or ("--help" in args):
+            print(
+f"""Usage: terml [Options]
+-t --terminal   Terminal to use when launching terminal apps
+-d --paths      Paths to look for apps
+
+When no options are specified, the defaults are:
+terminal: {self.terminal}
+paths:""")
+            for p in self.paths:
+                print(p)
+
+            print("""
+Source code:
+<https://github.com/danilogames220/term-launch>""")
+            exit(0)
+
 # NOTE:
 # - Things that require managing multiple objects at once (like filtering apps, etc...) should be done by the window. This is to make the code better to manage
 # 
@@ -25,6 +55,7 @@ from entries import *
 # - repeat
 class Window:
     data: Win_data
+    args: Win_args
 
     gui: Gui;
     buffer: Buffer;
@@ -66,16 +97,17 @@ class Window:
             # get input
             self.buffer.loop()
 
-    def __init__(self, 
-        win: curses.window
+    def __init__(self,
+        win: curses.window,
+        args: Win_args
     ) -> None:
         curses.set_escdelay(1) # no esc press delay
         
+        self.args = args
         self.init_objects(win)
         
         self.loop()
 
-def main(win: curses.window) -> None:
-    Window(win)
-
-curses.wrapper(main)
+# get arguments before starting window so that the program can print -h or other stuff without starting
+arguments: Win_args = Win_args()
+curses.wrapper(lambda win: Window(win, arguments))
