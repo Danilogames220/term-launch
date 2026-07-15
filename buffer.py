@@ -123,13 +123,20 @@ class Buffer:
                 0: self.change_mode,
                 # select
                 10: self.select,
+                
+                # move with arrow keys
+                258: self.move_down,
+                259: self.move_up,
+                336: self.move_c_down,
+                337: self.move_c_up,
             },
             modes.NAV: {
                 # esc
                 27: self.term,
                 # ctrl+space
                 0: self.change_mode,
-                #ord('e'): self.select
+                # select
+                10: self.select,
                 
                 # move select
                 ord('j'): self.move_down,
@@ -137,8 +144,12 @@ class Buffer:
                 # move list offset
                 ord('J'): self.move_c_down,
                 ord('K'): self.move_c_up,
+                
+                # move with arrow keys
+                258: self.move_down,
+                259: self.move_up,
+                336: self.move_c_down,
+                337: self.move_c_up,
 
-                # select
-                10: self.select,
             }
         }; 

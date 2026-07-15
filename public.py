@@ -23,7 +23,7 @@ class modes(Enum):
 class Win_data:
     width: int = -1
     height: int = -1
-    p: curses.window # pointer to curses.window
+    p: curses.window 
 
     selected_entry_index: int = 0;
     list_display_offset: int = 0;
@@ -33,10 +33,10 @@ class Win_data:
 
     query_target: str = ""
     # for Gui class
-    # if it is at the end of the query(as usualy), then its value should be len(query_target)
+    # horizontal position of the cursor when typing in search mode
     query_cursor_pos: int = 0
 
-    mode: modes = modes.NAV
+    mode: modes = modes.SEARCH
 
     def set_entries(self,
         List: list[App]
