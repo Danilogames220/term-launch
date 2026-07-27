@@ -11,7 +11,7 @@ The only depedency needed for compiling (aside python) is [PyInstaller](https://
 
 You can compile the code by running the following command: 
 ```
-pyinstaller main.py -n tlaunch --onefile
+pyinstaller main.py -n terml --onefile
 ```
 or using the Makefile to compile and install the program
 ```
