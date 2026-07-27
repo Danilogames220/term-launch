@@ -6,7 +6,7 @@
 # - fix search text overflow
 
 import curses
-from os import 
+#from os import 
 import sys
 from pathlib import Path
 # files
