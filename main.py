@@ -46,7 +46,7 @@ When paths are not specified, the defaults are:""")
             print("""
 Source code:
 <https://github.com/danilogames220/term-launch>""")
-            exit(0)
+            sys.exit(0)
         
         # get dirs passed by the user
         p_pos: int = 0
@@ -67,7 +67,7 @@ Source code:
             if (type(e) != IndexError):
                 raise e
             print("ERROR: No paths provided")
-            exit(0)
+            sys.exit(0)
         
         # replace ~ with home dir
         if (self.terminal == "NULL"):

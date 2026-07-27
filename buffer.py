@@ -1,5 +1,6 @@
 import curses
 import subprocess
+import sys
 
 from public import *
 
@@ -59,7 +60,7 @@ class Buffer:
     def change_mode(self) -> None:
         self.w_data.mode = modes(not self.w_data.mode.value)
     def term(self) -> None:
-        exit(0)
+        sys.exit(0)
         pass
     def select(self) -> None: 
         # selected app
@@ -85,7 +86,7 @@ class Buffer:
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.STDOUT
             ) 
-        exit(0)
+        sys.exit(0)
 
     # handles input for seach data
     def add_chr(self, k: int) -> None:
