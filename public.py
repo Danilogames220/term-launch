@@ -1,12 +1,62 @@
 from enum import Enum
 import curses
 
-from entries import *
+#from entries import *
 
 # NOTE: if you add aother mode, change how Buffer.change_mode() works
 class modes(Enum):
     SEARCH = 0
     NAV = 1
+
+# Holds data of each app
+class App:
+    name: str;
+    path: str;
+    raw_cmd: str;
+
+    ex_cmd: str = "";
+    is_hidden: bool = False
+    is_terminal: bool = False
+    
+    def parse_cmd(self, 
+        cmd: str
+    ) -> str:
+        p_cmd: str = cmd
+
+        p_cmd = p_cmd.replace("%f", "")
+        p_cmd = p_cmd.replace("%F", "")
+        p_cmd = p_cmd.replace("%u", os.getcwd())
+        p_cmd = p_cmd.replace("%U", "")
+        p_cmd = p_cmd.replace("%i", "")
+        p_cmd = p_cmd.replace("%", "") # keep this one at last to not mess up the others
+
+        return p_cmd
+    
+
+    def __init__(self, path: str):
+        self.path = path
+        self.name = ""
+        
+        with open(path) as f:
+            def check(l: str, arg: str) -> bool:
+                return (l.find(arg) != -1)
+
+            for line in f:
+                # find app name
+                if (check(line, "Name=")) and (len(self.name) == 0):
+                    self.name = line.split("Name=")[1]
+                    #self.name = line[line.find("Name="):]
+                # find app launch command
+                if (check(line, "Exec=")) and (self.ex_cmd == ""):
+                    self.ex_cmd = line.split("Exec=")[1]
+
+                # check if app is hidden 
+                if (check(line, "NoDisplay=true")) or (check(line, "Hidden=true")):
+                    self.is_hidden = True
+                
+                # check if it is a terminal app
+                if (check(line, "Terminal=true")):
+                    self.is_terminal = True
 
 # wrapper for shared window data
 class Win_data:
