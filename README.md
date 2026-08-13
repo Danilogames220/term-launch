@@ -15,7 +15,7 @@ pyinstaller main.py -n terml --onefile
 ```
 or using the Makefile to compile and install the program
 ```
-make install
+make build install
 ```
 ### Uninstalling
 To uninstall the program, you can just remove the desktop entry and the executable or also use the makefile
